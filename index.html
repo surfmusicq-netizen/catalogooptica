@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Optics | Catálogo Premium</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Three.js & MediaPipe for Pro VTO -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">LUMINA <span>OPTICS</span></div>
+            <div class="menu-icon">☰</div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Visión sin límites, estilo sin esfuerzo.</h1>
+                <p>Explora nuestra colección 2026. Tecnología de lunas avanzada y monturas de diseño exclusivo.</p>
+                <div class="cta-group">
+                    <button class="btn-primary">Ver Catálogo</button>
+                    <button class="btn-secondary" onclick="toggleVirtualTryOn()">
+                        <span class="icon">📷</span> Probar con Cámara
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="catalog" class="catalog-grid">
+            <!-- Los productos se cargarán dinámicamente desde Supabase -->
+            <div id="loading-spinner" class="loader-container">
+                <div class="spinner"></div>
+                <p>Cargando monturas premium...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Overlay for Virtual Try On Demo -->
+    <div id="vto-overlay" class="overlay">
+        <div class="vto-container">
+            <button class="close-btn" onclick="toggleVirtualTryOn()">×</button>
+            <div class="vto-video-container">
+                <video id="vto-video" autoplay playsinline></video>
+                <canvas id="vto-canvas"></canvas>
+                <div id="vto-loader" class="vto-video-placeholder">
+                    <div class="pulse"></div>
+                    <p>Iniciando Realidad Aumentada...</p>
+                </div>
+            </div>
+            <div class="vto-controls">
+                <span>Desliza para cambiar modelo</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

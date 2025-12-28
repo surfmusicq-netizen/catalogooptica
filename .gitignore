@@ -1,0 +1,9 @@
+# Ignorar archivos de sistema
+$RECYCLE.BIN/
+$Recycle.Bin/
+System Volume Information/
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.gemini/
