@@ -80,6 +80,7 @@ function onResults(results) {
 }
 
 // --- Catalog Logic ---
+// --- Catalog Logic ---
 async function loadCatalog(category = null, showAll = false) {
     const grid = document.getElementById('catalog');
     grid.innerHTML = '<div class="loader-container"><div class="spinner"></div><p>Cargando colección...</p></div>';
@@ -105,6 +106,32 @@ async function loadCatalog(category = null, showAll = false) {
         renderProducts([]); // Show empty if fails
     }
 }
+
+// Subcategory filtering (Client-side for now since missing DB columns)
+window.filterCatalog = (category, gender, filter) => {
+    // Scroll to catalog
+    document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' });
+    const grid = document.getElementById('catalog');
+    grid.innerHTML = '<div class="loader-container"><div class="spinner"></div><p>Filtrando...</p></div>';
+
+    loadCatalog(category).then(() => {
+        // Apply extra client side filters
+        let filtered = currentProducts;
+
+        // Mock filtering logic since we don't have 'gender' column yet users want to see it work
+        // Ideally we would query against the DB.
+
+        // Filter by material if it matches
+        if (filter === 'Acetato' || filter === 'Metal' || filter === 'TR90' || filter === 'Carey') {
+            filtered = currentProducts.filter(p => p.material && p.material.includes(filter));
+        } else if (filter === 'Tendencias' || filter === 'Marcas') {
+            // Just show all for mock as these aren't columns yet
+        }
+
+        renderProducts(filtered);
+        document.getElementById('catalog-title').innerText = `${category} - ${gender} (${filter})`;
+    });
+};
 
 function renderProducts(products) {
     const grid = document.getElementById('catalog');

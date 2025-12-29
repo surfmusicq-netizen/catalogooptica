@@ -30,8 +30,60 @@
                 <span></span>
             </div>
             <div class="nav-links">
-                <a href="#" onclick="loadCatalogByCategory('SOL')">LENTES DE SOL</a>
-                <a href="#" onclick="loadCatalogByCategory('OFTALMICO')">OFTÁLMICOS</a>
+                <!-- LENTES DE SOL -->
+                <div class="dropdown">
+                    <a href="#" class="dropbtn" onclick="loadCatalogByCategory('SOL')">LENTES DE SOL</a>
+                    <div class="dropdown-content">
+                        <div class="mega-row">
+                            <div class="mega-col">
+                                <h4>PARA DAMAS</h4>
+                                <a onclick="filterCatalog('SOL', 'Dama', 'Tendencias')">Tendencias</a>
+                                <a onclick="filterCatalog('SOL', 'Dama', 'Marcas')">Marcas</a>
+                                <a onclick="filterCatalog('SOL', 'Dama', 'Acetato')">Acetato</a>
+                                <a onclick="filterCatalog('SOL', 'Dama', 'Carey')">Carey</a>
+                                <a onclick="filterCatalog('SOL', 'Dama', 'TR90')">TR90</a>
+                                <a onclick="filterCatalog('SOL', 'Dama', 'Metal')">Metal</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>PARA CABALLEROS</h4>
+                                <a onclick="filterCatalog('SOL', 'Caballero', 'Tendencias')">Tendencias</a>
+                                <a onclick="filterCatalog('SOL', 'Caballero', 'Marcas')">Marcas</a>
+                                <a onclick="filterCatalog('SOL', 'Caballero', 'Acetato')">Acetato</a>
+                                <a onclick="filterCatalog('SOL', 'Caballero', 'Carey')">Carey</a>
+                                <a onclick="filterCatalog('SOL', 'Caballero', 'TR90')">TR90</a>
+                                <a onclick="filterCatalog('SOL', 'Caballero', 'Metal')">Metal</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LENTES OFTALMICOS -->
+                <div class="dropdown">
+                    <a href="#" class="dropbtn" onclick="loadCatalogByCategory('OFTALMICO')">OFTÁLMICOS</a>
+                    <div class="dropdown-content">
+                        <div class="mega-row">
+                            <div class="mega-col">
+                                <h4>PARA DAMAS</h4>
+                                <a onclick="filterCatalog('OFTALMICO', 'Dama', 'Tendencias')">Tendencias</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Dama', 'Marcas')">Marcas</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Dama', 'Acetato')">Acetato</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Dama', 'Carey')">Carey</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Dama', 'TR90')">TR90</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Dama', 'Metal')">Metal</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>PARA CABALLEROS</h4>
+                                <a onclick="filterCatalog('OFTALMICO', 'Caballero', 'Tendencias')">Tendencias</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Caballero', 'Marcas')">Marcas</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Caballero', 'Acetato')">Acetato</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Caballero', 'Carey')">Carey</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Caballero', 'TR90')">TR90</a>
+                                <a onclick="filterCatalog('OFTALMICO', 'Caballero', 'Metal')">Metal</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="#" onclick="loadCatalogByCategory('CONTACTO')">LENTES DE CONTACTO</a>
                 <a href="admin.html" style="color: var(--accent-color); font-weight: 700;">ADMIN</a>
             </div>
