@@ -82,8 +82,10 @@ nav {
 /* Hero / Banners */
 .hero {
     margin-top: 80px;
-    background: #f9f9f9;
-    padding: 6rem 5%;
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('hero_banner.png');
+    background-size: cover;
+    background-position: center;
+    padding: 12rem 5%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -165,46 +167,60 @@ nav {
     font-size: 1rem;
 }
 
-/* Categories Grid (GMO style) */
+/* Categories Grid (GMO PRO Style) */
 .categories-preview {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 2rem auto;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 3rem auto;
     padding: 0 5%;
 }
 
 .cat-item {
-    text-align: center;
+    position: relative;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
     cursor: pointer;
-    transition: transform 0.3s;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    transition: transform 0.4s ease;
 }
 
 .cat-item:hover {
-    transform: translateY(-5px);
+    transform: scale(1.02);
 }
 
-.cat-circle {
-    width: 120px;
-    height: 120px;
-    background: #f0f0f0;
-    border-radius: 50%;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+.cat-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
 }
 
-.cat-circle img {
-    width: 70%;
-    height: auto;
-    transition: transform 0.3s;
+.cat-item h3 {
+    position: relative;
+    z-index: 10;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-.cat-item:hover .cat-circle img {
-    transform: scale(1.1);
+.cat-sol {
+    background-image: url('cat_sol.png');
+}
+
+.cat-oftalmico {
+    background-image: url('cat_oftalmico.png');
+}
+
+.cat-contacto {
+    background-image: url('cat_contacto.png');
 }
 
 /* Product Grid */
