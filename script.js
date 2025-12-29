@@ -161,6 +161,18 @@ function renderProducts(products) {
     });
 }
 
+// Update Wrapper to also close menu
+window.loadCatalogByCategory = (cat) => {
+    // Close Mobile Menu if Open
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+    }
+
+    loadCatalog(cat, true);
+    document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' });
+};
+
 function openModal(p) {
     const modal = document.getElementById('product-modal');
     document.getElementById('modal-image').src = p.image_url;
@@ -177,6 +189,34 @@ function openModal(p) {
         </div>
     `;
 
+    // --- SIMILAR PRODUCTS LOGIC ---
+    // Pick 3 random products that are NOT the current one
+    const similarContainer = document.getElementById('similar-products-container');
+    if (similarContainer) {
+        similarContainer.innerHTML = ''; // Clear previous
+
+        let candidates = currentProducts.filter(item => item.id !== p.id);
+        // If we have categories, maybe filter by same category?
+        if (p.type) candidates = candidates.filter(item => item.type === p.type);
+
+        // Shuffle and pick 3
+        const similar = candidates.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+        similar.forEach(sim => {
+            const simCard = document.createElement('div');
+            simCard.className = 'similar-card';
+            simCard.innerHTML = `
+                <img src="${sim.image_url}" alt="${sim.name}">
+                <div>
+                    <h4>${sim.name}</h4>
+                    <span>S/ ${parseFloat(sim.price).toFixed(2)}</span>
+                </div>
+            `;
+            simCard.onclick = () => openModal(sim); // Recursive opening
+            similarContainer.appendChild(simCard);
+        });
+    }
+
     modal.style.display = 'flex';
     document.getElementById('modal-vto-btn').onclick = () => { modal.style.display = 'none'; startVTO(); };
     document.getElementById('modal-wa-btn').onclick = () => {
@@ -184,23 +224,6 @@ function openModal(p) {
         window.open(`https://wa.me/51900000000?text=${msg}`, '_blank');
     };
 }
-
-function startVTO() {
-    document.getElementById('vto-overlay').style.display = 'block';
-    if (!camera) setupVTO();
-    camera.start();
-}
-
-function stopVTO() {
-    document.getElementById('vto-overlay').style.display = 'none';
-    if (camera) camera.stop();
-    if (glassesModel) glassesModel.visible = false;
-}
-
-window.loadCatalogByCategory = (cat) => {
-    loadCatalog(cat, true);
-    document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' });
-};
 
 // --- Listeners ---
 window.addEventListener('DOMContentLoaded', () => {

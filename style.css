@@ -736,20 +736,20 @@ nav {
 @media (max-width: 900px) {
     .modal-content {
         grid-template-columns: 1fr;
-        max-height: 90vh;
+        max-height: 95vh;
         overflow-y: auto;
-    }
+        width: 95%;
 
-    .product-gallery {
-        padding: 2rem;
-    }
+        .product-gallery {
+            padding: 2rem;
+        }
 
-    .product-details {
-        padding: 2rem;
-    }
+        .product-details {
+            padding: 2rem;
+        }
 
-    .hero {
-        padding: 6rem 5%;
-        margin-top: 70px;
+        .hero {
+            padding: 6rem 5%;
+            margin-top: 70px;
+        }
     }
-}
