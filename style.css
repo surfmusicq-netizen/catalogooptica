@@ -223,15 +223,42 @@ nav {
 
 @media (max-width: 900px) {
     .categories-preview {
-        grid-template-columns: 1fr;
-        /* Stack vertically on mobile */
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
         gap: 1rem;
+        padding-bottom: 1rem;
+        /* Space for scrollbar */
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scroll iOS */
     }
 
     .cat-item {
-        height: 250px;
-        /* Shorter cards on mobile */
+        min-width: 85%;
+        /* Shows part of the next card to encourage scroll */
+        height: 350px;
+        scroll-snap-align: center;
     }
+
+    /* Hide scrollbar for cleaner look */
+    .categories-preview::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .categories-preview::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .categories-preview::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+}
+
+.cat-item {
+    height: 250px;
+    /* Shorter cards on mobile */
+}
 }
 
 .cat-item {
