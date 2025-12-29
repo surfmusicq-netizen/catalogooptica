@@ -43,10 +43,12 @@ nav {
 }
 
 .logo img {
-    height: 60px;
-    /* Logo más grande */
-    width: auto;
+    height: auto;
+    width: clamp(180px, 35vw, 240px);
+    /* Much Larger Logo */
     object-fit: contain;
+    max-height: 90px;
+    transition: all 0.3s ease;
 }
 
 .nav-links {
@@ -363,31 +365,57 @@ nav {
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         gap: 1rem;
-        padding-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        /* Reduced padding to minimize scroll space */
         margin-top: 2rem;
-        /* Separacion extra en movil */
         -webkit-overflow-scrolling: touch;
+
+        /* Force Hide Scrollbar Aggressively */
+        scrollbar-width: none !important;
+        /* Firefox/Edge */
+        -ms-overflow-style: none !important;
+        /* IE */
+    }
+
+    .categories-preview::-webkit-scrollbar {
+        display: none !important;
+        /* Chrome/Safari/Brave */
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+        -webkit-appearance: none !important;
     }
 
     .cat-item {
         min-width: 85%;
-        /* Shows part of the next card to encourage scroll */
         height: 350px;
         scroll-snap-align: center;
     }
+}
 
-    /* Hide scrollbar for cleaner look */
-    .categories-preview::-webkit-scrollbar {
-        height: 6px;
+/* Admin Responsive Fixes */
+@media (max-width: 768px) {
+    .admin-container {
+        grid-template-columns: 1fr;
+        /* Stack form and table */
+        padding: 1rem;
     }
 
-    .categories-preview::-webkit-scrollbar-track {
-        background: #f1f1f1;
+    .admin-form {
+        position: static;
+        /* Remove sticky on mobile */
+        margin-bottom: 2rem;
+        max-height: none;
     }
 
-    .categories-preview::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 4px;
+    .products-table {
+        display: block;
+        overflow-x: auto;
+        /* Scrollable table */
+        white-space: nowrap;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 }
 
