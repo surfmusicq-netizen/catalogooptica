@@ -784,71 +784,109 @@ nav {
     }
 }
 
-/* Similar Products - Horizontal Side-by-Side */
+/* Similar Products */
 .similar-products {
     border-top: 1px solid #f0f0f0;
     margin-top: 2rem;
-    padding-top: 1rem;
+    /* Spacing */
+    padding-top: 1.5rem;
 }
 
+/* Desktop Default: Grid */
 .similar-grid {
-    display: flex;
-    /* Horizontal Layout */
-    gap: 15px;
-    overflow-x: auto;
-    /* Scrollable horizontally */
-    padding-bottom: 10px;
-    /* Space for scrollbar */
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Hide scrollbar for sim products but keep functionality */
-.similar-grid::-webkit-scrollbar {
-    height: 4px;
-}
-
-.similar-grid::-webkit-scrollbar-thumb {
-    background: #eee;
-    border-radius: 4px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding-bottom: 0;
 }
 
 .similar-card {
-    flex: 0 0 100px;
-    /* Fixed small width */
-    width: 100px;
-    scroll-snap-align: start;
     cursor: pointer;
     text-align: center;
     border: 1px solid transparent;
     border-radius: 8px;
-    padding: 8px;
+    padding: 10px;
     transition: all 0.2s;
+    background: #fff;
 }
 
 .similar-card:hover {
     background: #fdfdfd;
     border-color: #eee;
+    transform: translateY(-2px);
 }
 
 .similar-card img {
     width: 100%;
-    height: 60px;
-    /* Small thumbnail */
+    height: 100px;
+    /* Slightly larger on desktop */
     object-fit: contain;
-    margin-bottom: 5px;
+    background: #f9f9f9;
+    /* Subtle background for product alignment */
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 .similar-card div h4 {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
 }
 
 .similar-card div span {
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--accent-color);
+}
+
+/* Mobile Overrides */
+@media (max-width: 900px) {
+    .similar-grid {
+        display: flex;
+        /* Horizontal Layout on Mobile */
+        gap: 12px;
+        overflow-x: auto;
+        /* Scrollable horizontally */
+        padding-bottom: 10px;
+        /* Space for scrollbar */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        grid-template-columns: none;
+        /* Reset grid */
+    }
+
+    /* Fine slim scrollbar for mobile */
+    .similar-grid::-webkit-scrollbar {
+        height: 3px;
+    }
+
+    .similar-grid::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 10px;
+    }
+
+    .similar-card {
+        flex: 0 0 110px;
+        /* Fixed small width */
+        width: 110px;
+        scroll-snap-align: start;
+        padding: 5px;
+    }
+
+    .similar-card img {
+        height: 70px;
+        /* Smaller thumbnail */
+        margin-bottom: 5px;
+    }
+
+    .similar-card div h4 {
+        font-size: 0.75rem;
+    }
+
+    .similar-card div span {
+        font-size: 0.8rem;
+    }
 }
