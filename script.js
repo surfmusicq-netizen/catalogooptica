@@ -1,7 +1,7 @@
 // Supabase Configuration
-const SB_URL = "https://dwjeejsutmkfsdmldoxq.supabase.co"; // URL corregida
+const SB_URL = "https://dwjeejsutmkfsdmldoxq.supabase.co";
 const SB_KEY = "sb_publishable_iRRcY7--9c49Tj45fK8RAg_v0sAoMNo";
-const supabase = supabase.createClient(SB_URL, SB_KEY);
+const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
 let stream = null;
 let camera = null;
@@ -50,15 +50,15 @@ function initThreeJS() {
     glassesModel = new THREE.Group();
 
     const frameMaterial = new THREE.MeshStandardMaterial({
-        color: 0x111111,
-        metalness: 0.8,
-        roughness: 0.2
+        color: 0x00a3e0, // Cyan Branding
+        metalness: 0.9,
+        roughness: 0.1
     });
 
     const lensMaterial = new THREE.MeshStandardMaterial({
-        color: 0x88ccff,
+        color: 0x00a3e0,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.3,
         metalness: 1,
         roughness: 0
     });
@@ -170,39 +170,51 @@ async function loadCatalog() {
     const catalogGrid = document.getElementById('catalog');
 
     try {
-        const { data: products, error } = await supabase
+        const { data: products, error } = await _supabase
             .from('products')
             .select('*');
 
         if (error) throw error;
 
-        catalogGrid.innerHTML = ''; // Limpiar spinner
-
-        if (products.length === 0) {
-            catalogGrid.innerHTML = '<p class="loader-container">No hay productos disponibles por ahora.</p>';
-            return;
-        }
-
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-image">
-                    <img src="${product.image_url}" alt="${product.name}">
-                    ${product.badge ? `<div class="badge">${product.badge}</div>` : ''}
-                </div>
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p class="price">S/ ${parseFloat(product.price).toFixed(2)}</p>
-                    <button class="btn-whatsapp" onclick="quoteWhatsApp('${product.name}')">Consultar WhatsApp</button>
-                </div>
-            `;
-            catalogGrid.appendChild(card);
-        });
+        renderProducts(products);
     } catch (err) {
         console.error("Error cargando el catálogo:", err);
-        catalogGrid.innerHTML = `<p class="loader-container" style="color: #ff4444">Error al conectar con la base de datos.</p>`;
+        // Fallback: Productos de demostración si la base de datos falla
+        const fallbackProducts = [
+            { name: "Aviator Cyan Pro", price: 299, image_url: "https://images.unsplash.com/photo-1572635196237-14b3f281503f", badge: "Premium" },
+            { name: "Visión Free Classic", price: 189, image_url: "https://images.unsplash.com/photo-1511499767390-91f89608021d", badge: "Popular" },
+            { name: "Digital Shield Blue", price: 245, image_url: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67", badge: "Nuevo" }
+        ];
+        renderProducts(fallbackProducts);
+        console.log("Mostrando productos de demostración por error en DB.");
     }
+}
+
+function renderProducts(products) {
+    const catalogGrid = document.getElementById('catalog');
+    catalogGrid.innerHTML = '';
+
+    if (!products || products.length === 0) {
+        catalogGrid.innerHTML = '<p class="loader-container">No hay productos disponibles por ahora.</p>';
+        return;
+    }
+
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="product-image">
+                <img src="${product.image_url}" alt="${product.name}">
+                ${product.badge ? `<div class="badge">${product.badge}</div>` : ''}
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <p class="price">S/ ${parseFloat(product.price).toFixed(2)}</p>
+                <button class="btn-whatsapp" onclick="quoteWhatsApp('${product.name}')">Pedir por WhatsApp</button>
+            </div>
+        `;
+        catalogGrid.appendChild(card);
+    });
 }
 
 function quoteWhatsApp(productName) {

@@ -1,11 +1,13 @@
 :root {
-    --bg-color: #050505;
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --accent-color: #ffffff;
+    --bg-color: #0d1117;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --accent-color: #00a3e0;
+    /* Cyan del logo */
+    --accent-gradient: linear-gradient(135deg, #00a3e0 0%, #005696 100%);
     --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
+    --text-secondary: #cbd5e0;
     --whatsapp-green: #25D366;
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -39,14 +41,22 @@ nav {
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
 }
 
 .logo span {
-    font-weight: 300;
-    opacity: 0.7;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    text-transform: uppercase;
 }
 
 .hero {
@@ -56,17 +66,31 @@ nav {
     justify-content: center;
     text-align: center;
     padding: 0 10%;
-    background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+    background: radial-gradient(circle at center, #001f3f 0%, #0d1117 100%);
+    position: relative;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('logocolor.png') no-repeat center;
+    background-size: 40%;
+    opacity: 0.03;
+    filter: grayscale(1);
+    pointer-events: none;
 }
 
 .hero-content h1 {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
     line-height: 1.1;
     margin-bottom: 1.5rem;
-    background: linear-gradient(180deg, #fff 0%, #666 100%);
+    background: linear-gradient(180deg, #fff 40%, var(--accent-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    font-weight: 600;
 }
+
 
 .hero-content p {
     font-size: 1.2rem;
@@ -92,13 +116,14 @@ button {
 }
 
 .btn-primary {
-    background: var(--accent-color);
-    color: #000;
+    background: var(--accent-gradient);
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(0, 163, 224, 0.2);
 }
 
 .btn-primary:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 163, 224, 0.4);
 }
 
 .btn-secondary {
@@ -304,7 +329,7 @@ button {
 .spinner {
     width: 50px;
     height: 50px;
-    border: 3px solid rgba(255,255,255,0.1);
+    border: 3px solid rgba(255, 255, 255, 0.1);
     border-top-color: #fff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -312,5 +337,7 @@ button {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
