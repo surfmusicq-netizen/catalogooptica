@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visión Free | Tecnología Visual Premium</title>
+    <title>Visión Free | Tienda Online de Lentes y Cuidado Visual</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Three.js & MediaPipe for Pro VTO -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
@@ -21,90 +21,123 @@
 <body>
     <header>
         <nav>
-            <div class="logo">
+            <a href="index.html" class="logo">
                 <img src="logocolor.png" alt="Visión Free Logo">
                 <span>Visión Free</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" onclick="loadCatalogByCategory('SOL')">LENTES DE SOL</a>
+                <a href="#" onclick="loadCatalogByCategory('OFTALMICO')">OFTÁLMICOS</a>
+                <a href="#" onclick="loadCatalogByCategory('CONTACTO')">LENTES DE CONTACTO</a>
+                <a href="admin.html" style="color: var(--accent-color); font-weight: 700;">ADMIN</a>
             </div>
-            <div class="menu-icon">☰</div>
         </nav>
     </header>
 
     <main>
+        <!-- Promo Banner -->
         <section class="hero">
             <div class="hero-content">
-                <h1>Visión sin límites, estilo sin esfuerzo.</h1>
-                <p>Explora nuestra colección 2026. Tecnología de luna avanzada y monturas de diseño exclusivo.</p>
+                <small style="text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">NUEVA COLECCIÓN
+                    2026</small>
+                <h1>Encuentra tu estilo exclusivo.</h1>
+                <p>Hasta 30% de descuento en monturas seleccionadas y envío gratis a todo Lima.</p>
                 <div class="hero-btns">
-                    <button class="btn-primary">Ver Catálogo</button>
-                    <button class="btn-secondary" id="direct-vto">Probar con Cámara</button>
+                    <button class="btn-primary" onclick="scrollToElement('catalog')">COMPRAR AHORA</button>
+                    <button class="btn-secondary" id="direct-vto">PROBADOR VIRTUAL</button>
                 </div>
             </div>
         </section>
 
+        <!-- Categories Section (GMO Style) -->
         <section class="section-header">
-            <h2 class="section-title">Novedades & Ofertas</h2>
-            <p class="section-subtitle">Exclusividad en cada mirada</p>
+            <h2 class="section-title">Comprar por Categoría</h2>
         </section>
 
-        <section id="catalog" class="catalog-grid">
-            <!-- Los productos se cargarán dinámicamente desde Supabase -->
-            <div id="loading-spinner" class="loader-container">
-                <div class="spinner"></div>
-                <p>Curando lo mejor para ti...</p>
+        <div class="categories-preview">
+            <div class="cat-item" onclick="loadCatalogByCategory('SOL')">
+                <div class="cat-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233519.png" alt="Sol">
+                </div>
+                <h3>Lentes de Sol</h3>
+            </div>
+            <div class="cat-item" onclick="loadCatalogByCategory('OFTALMICO')">
+                <div class="cat-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233486.png" alt="Oftalmico">
+                </div>
+                <h3>Oftálmicos</h3>
+            </div>
+            <div class="cat-item" onclick="loadCatalogByCategory('CONTACTO')">
+                <div class="cat-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233502.png" alt="Contacto">
+                </div>
+                <h3>Contacto</h3>
+            </div>
+        </div>
+
+        <!-- Catalog Section -->
+        <section id="catalog-section">
+            <div class="section-header">
+                <h2 class="section-title" id="catalog-title">Best Sellers</h2>
+                <p class="section-subtitle">Descubre las monturas más deseadas de la temporada.</p>
+            </div>
+
+            <section id="catalog" class="catalog-grid">
+                <div id="loading-spinner" class="loader-container">
+                    <div class="spinner"></div>
+                    <p>Cargando lo mejor para tu visión...</p>
+                </div>
+            </section>
+
+            <div class="view-all-container">
+                <button class="btn-secondary" id="load-all-btn">VER TODO EL CATÁLOGO</button>
             </div>
         </section>
-
-        <div class="view-all-container">
-            <button class="btn-secondary" id="load-all-btn">Ver Colección Completa</button>
-        </div>
     </main>
 
-    <!-- Product Detail Modal -->
+    <!-- Modal Detalles -->
     <div id="product-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <div class="modal-body">
-                <div class="product-gallery">
-                    <img id="modal-image" src="" alt="Product">
-                    <div id="modal-badge-float" class="badge"></div>
+            <div class="product-gallery">
+                <img id="modal-image" src="" alt="Product">
+            </div>
+            <div class="product-details">
+                <small id="modal-brand"
+                    style="text-transform: uppercase; font-weight: 700; color: var(--accent-color);"></small>
+                <h2 id="modal-name"></h2>
+                <p id="modal-price" class="price"></p>
+
+                <div id="modal-specs-list" style="margin-bottom: 2rem;">
+                    <!-- JS fills this -->
                 </div>
-                <div class="product-details">
-                    <h2 id="modal-name"></h2>
-                    <p id="modal-price" class="price"></p>
-                    <p class="product-desc">Diseño ergonómico con acabados de alta precisión. Materiales resistentes y
-                        ligeros para un confort diario superior. Ideal para uso prolongado frente a pantallas.</p>
 
-                    <div class="modal-actions">
-                        <button class="btn-primary" id="modal-vto-btn">
-                            <span class="icon">📷</span> Probar con Cámara
-                        </button>
-                        <button class="btn-whatsapp" id="modal-wa-btn">
-                            Pedir por WhatsApp
-                        </button>
-                    </div>
+                <p class="product-desc">Garantía de calidad Visión Free. Monturas calibradas para un ajuste perfecto y
+                    durabilidad prolongada.</p>
 
-                    <div class="product-specs">
-                        <div class="spec-item"><span>Material:</span> Acetato / Metal</div>
-                        <div class="spec-item"><span>Envío:</span> Gratis en todo Lima</div>
-                        <div class="spec-item"><span>Incluye:</span> Estuche rígido + Paño microfibra</div>
-                    </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" id="modal-vto-btn">PROBAR AR</button>
+                    <button class="btn-whatsapp" id="modal-wa-btn">PEDIR WHATSAPP</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Overlay for Virtual Try On -->
+    <!-- Virtual Try On -->
     <div id="vto-overlay" class="vto-overlay">
         <div class="vto-container">
-            <div class="loader" id="vto-loader">Cargando Realidad Aumentada...</div>
             <video id="input-video" playsinline style="display: none;"></video>
             <canvas id="output-canvas"></canvas>
             <button class="close-vto">&times;</button>
-            <div class="vto-instruction">Mueve tu cabeza lentamente para calibrar</div>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        function scrollToElement(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 
 </html>

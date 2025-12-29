@@ -4,168 +4,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Lumina Optics Admin</title>
+    <title>Admin Visión Free | Gestión GMO Style</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .admin-main {
-            padding: 8rem 5% 4rem;
-            max-width: 800px;
-            margin: 0 auto;
+        :root {
+            --admin-bg: #f8f9fa;
+            --admin-card: #ffffff;
         }
 
-        .form-container {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
+        body {
+            background: var(--admin-bg);
+            color: #333;
+        }
+
+        .admin-nav {
+            background: #fff;
+            padding: 1rem 5%;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 2rem;
+            padding: 2rem 5%;
+            margin-top: 80px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-panel,
+        .inventory-panel {
+            background: var(--admin-card);
             padding: 2.5rem;
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
-        .form-group label {
+        label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #555;
         }
 
         input,
         select {
             width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.3s;
         }
 
         input:focus {
-            border-color: #fff;
+            border-color: var(--accent-color);
         }
 
-        .btn-submit {
+        .inventory-table {
             width: 100%;
-            background: #fff;
-            color: #000;
-            margin-top: 1rem;
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .status-msg {
+            border-collapse: collapse;
             margin-top: 1.5rem;
+        }
+
+        .inventory-table th {
+            text-align: left;
             padding: 1rem;
-            border-radius: 12px;
-            display: none;
-            text-align: center;
+            border-bottom: 2px solid #eee;
+            color: #888;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
         }
 
-        .success {
-            background: rgba(37, 211, 102, 0.2);
-            color: #25D366;
-            display: block;
+        .inventory-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
         }
 
-        .error {
-            background: rgba(255, 68, 68, 0.2);
-            color: #ff4444;
-            display: block;
+        .prod-img-preview {
+            width: 60px;
+            height: 40px;
+            object-fit: contain;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .btn-delete {
+            background: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: #eef7ff;
+            color: #005696;
+            border: 1px solid #cce5ff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 1000px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="logo">LUMINA <span>ADMIN</span></div>
-            <a href="index.html" style="color: #fff; text-decoration: none; font-size: 0.9rem; opacity: 0.7;">← Volver
-                al Catálogo</a>
-        </nav>
-    </header>
+    <div class="admin-nav">
+        <div class="logo">
+            <img src="logocolor.png" alt="Logo">
+            <span style="color: #000;">Visión Free Admin</span>
+        </div>
+        <a href="index.html" class="btn-secondary">Volver a la Web</a>
+    </div>
 
-    <main class="admin-main">
-        <div class="form-container">
-            <h2 style="margin-bottom: 2rem;">Añadir Nueva Montura</h2>
+    <div class="admin-layout">
+        <!-- Formulario -->
+        <aside class="form-panel">
+            <h2 id="form-title" style="margin-bottom: 1.5rem; font-size: 1.4rem;">Nueva Montura</h2>
             <form id="product-form">
+                <input type="hidden" id="product-id">
+
                 <div class="form-group">
-                    <label>Nombre de la Montura</label>
-                    <input type="text" id="name" placeholder="Ej: Ray-Ban Aviator Platinum" required>
+                    <label>Nombre del Modelo</label>
+                    <input type="text" id="name" placeholder="Ej: RB3025 Aviator" required>
                 </div>
-                <div class="form-group">
-                    <label>Precio (S/)</label>
-                    <input type="number" id="price" step="0.01" placeholder="0.00" required>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" id="brand" placeholder="Ej: Ray-Ban">
+                    </div>
+                    <div class="form-group">
+                        <label>Precio (S/)</label>
+                        <input type="number" id="price" step="0.01" required>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label>URL de la Imagen</label>
-                    <input type="url" id="image_url" placeholder="https://..." required>
-                </div>
-                <div class="form-group">
-                    <label>Etiqueta (Badge)</label>
-                    <select id="badge">
-                        <option value="">Ninguna</option>
-                        <option value="Nuevo">Nuevo</option>
-                        <option value="Oferta">Oferta</option>
-                        <option value="Best Seller">Best Seller</option>
+                    <label>Categoría (GMO Style)</label>
+                    <select id="type" required>
+                        <option value="SOL">Lentes de Sol</option>
+                        <option value="OFTALMICO">Lentes Oftálmicos</option>
+                        <option value="CONTACTO">Lentes de Contacto</option>
                     </select>
                 </div>
-                <button type="submit" id="submit-btn" class="btn-submit">Publicar en Catálogo</button>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Material</label>
+                        <input type="text" id="material" placeholder="Metal / Acetato">
+                    </div>
+                    <div class="form-group">
+                        <label>Color Dominante</label>
+                        <input type="text" id="color" placeholder="Negro, Oro...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL Imagen (Fondo Blanco)</label>
+                    <input type="url" id="image_url" placeholder="https://..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>Insignia / Badge</label>
+                    <select id="badge">
+                        <option value="">Ninguna</option>
+                        <option value="NUEVO">Nuevo</option>
+                        <option value="OFERTA">Oferta</option>
+                        <option value="BEST SELLER">Best Seller</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="submit-btn" class="btn-primary" style="width: 100%; padding: 1rem;">PUBLICAR
+                    PRODUCTO</button>
+                <button type="button" id="cancel-btn" class="btn-secondary"
+                    style="width: 100%; margin-top: 10px; display: none;">CANCELAR EDICIÓN</button>
             </form>
-            <div id="status" class="status-msg"></div>
-        </div>
-    </main>
+        </aside>
+
+        <!-- Inventario -->
+        <section class="inventory-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.4rem;">Gestión de Stock</h2>
+                <div id="stats" style="color: #888; font-size: 0.85rem;">Cargando...</div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 
     <script>
         const SB_URL = "https://dwjeejsutmkfsdmldoxq.supabase.co";
         const SB_KEY = "sb_publishable_iRRcY7--9c49Tj45fK8RAg_v0sAoMNo";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
         const form = document.getElementById('product-form');
-        const status = document.getElementById('status');
+        const list = document.getElementById('inventory-list');
         const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+
+        async function fetchProducts() {
+            const { data, error } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
+            if (error) return;
+
+            document.getElementById('stats').innerText = `${data.length} productos en catálogo`;
+            list.innerHTML = '';
+            data.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${p.image_url}" class="prod-img-preview"></td>
+                    <td>
+                        <div style="font-weight:700">${p.brand || 'Visión Free'}</div>
+                        <div style="color:#666">${p.name}</div>
+                    </td>
+                    <td><small style="background:#eee; padding:2px 6px; border-radius:4px">${p.type || 'Lentes'}</small></td>
+                    <td style="font-weight:700">S/ ${parseFloat(p.price).toFixed(2)}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editProduct(${JSON.stringify(p).replace(/"/g, '&quot;')})">Editar</button>
+                        <button class="btn-delete" onclick="deleteProduct('${p.id}')">Borrar</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
 
         form.onsubmit = async (e) => {
             e.preventDefault();
             submitBtn.disabled = true;
-            submitBtn.innerText = 'Publicando...';
-            status.className = 'status-msg';
+            submitBtn.innerText = "PROCESANDO...";
 
+            const id = document.getElementById('product-id').value;
             const product = {
                 name: document.getElementById('name').value,
+                brand: document.getElementById('brand').value,
                 price: parseFloat(document.getElementById('price').value),
+                type: document.getElementById('type').value,
+                material: document.getElementById('material').value,
+                color: document.getElementById('color').value,
                 image_url: document.getElementById('image_url').value,
                 badge: document.getElementById('badge').value || null
             };
 
-            try {
-                const { error } = await supabaseClient
-                    .from('products')
-                    .insert([product]);
+            let err;
+            if (id) {
+                const { error } = await _supabase.from('products').update(product).eq('id', id);
+                err = error;
+            } else {
+                const { error } = await _supabase.from('products').insert([product]);
+                err = error;
+            }
 
-                if (error) throw error;
+            if (err) alert("Ocurrió un error: " + err.message);
+            else { resetForm(); fetchProducts(); }
+            submitBtn.disabled = false;
+        };
 
-                status.innerText = "¡Producto publicado con éxito!";
-                status.classList.add('success');
-                form.reset();
-            } catch (err) {
-                console.error(err);
-                status.innerText = "Error al publicar: " + err.message;
-                status.classList.add('error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Publicar en Catálogo';
+        window.editProduct = (p) => {
+            document.getElementById('form-title').innerText = "Editando Modelo";
+            document.getElementById('product-id').value = p.id;
+            document.getElementById('name').value = p.name;
+            document.getElementById('brand').value = p.brand || '';
+            document.getElementById('price').value = p.price;
+            document.getElementById('type').value = p.type || 'SOL';
+            document.getElementById('material').value = p.material || '';
+            document.getElementById('color').value = p.color || '';
+            document.getElementById('image_url').value = p.image_url;
+            document.getElementById('badge').value = p.badge || '';
+
+            cancelBtn.style.display = 'block';
+            submitBtn.innerText = "ACTUALIZAR DATOS";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.deleteProduct = async (id) => {
+            if (confirm("¿Seguro que quieres eliminar este producto?")) {
+                await _supabase.from('products').delete().eq('id', id);
+                fetchProducts();
             }
         };
+
+        function resetForm() {
+            form.reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('form-title').innerText = "Nueva Montura";
+            submitBtn.innerText = "PUBLICAR PRODUCTO";
+            cancelBtn.style.display = 'none';
+        }
+
+        cancelBtn.onclick = resetForm;
+        fetchProducts();
     </script>
 </body>
 
