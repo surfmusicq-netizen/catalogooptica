@@ -6,51 +6,61 @@ const _supabase = supabase.createClient(SB_URL, SB_KEY);
 let stream = null;
 let camera = null;
 let faceMesh = null;
-let scene, threeCamera, renderer, glassesModel;
-const VTO_VIDEO = document.getElementById('vto-video');
-const VTO_CANVAS = document.getElementById('vto-canvas');
+let glassesModel = null;
+let scene, renderer, threeCamera;
+let currentProducts = [];
 
-async function toggleVirtualTryOn() {
-    const overlay = document.getElementById('vto-overlay');
-    const loader = document.getElementById('vto-loader');
+// --- VTO Core Logic ---
+async function setupVTO() {
+    const videoElement = document.getElementById('input-video');
+    const canvasElement = document.getElementById('output-canvas');
+    const vtoLoader = document.getElementById('vto-loader');
 
-    overlay.classList.toggle('active');
-
-    if (overlay.classList.contains('active')) {
-        loader.style.display = 'flex';
-        initThreeJS();
-        initMediaPipe();
-    } else {
-        stopVTO();
-    }
-}
-
-function initThreeJS() {
     scene = new THREE.Scene();
-    threeCamera = new THREE.PerspectiveCamera(45, VTO_CANVAS.clientWidth / VTO_CANVAS.clientHeight, 0.1, 1000);
-
+    threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({
-        canvas: VTO_CANVAS,
+        canvas: canvasElement,
         alpha: true,
         antialias: true
     });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(VTO_CANVAS.clientWidth, VTO_CANVAS.clientHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Luces para el modelo 3D
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
-
-    const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-    dirLight.position.set(0, 10, 10);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(0, 5, 5);
     scene.add(dirLight);
 
-    // Creamos una montura 3D básica con geometrías de Three.js
-    // Esto asegura que funcione sin descargar archivos externos
+    createGlassesModel();
+
+    faceMesh = new FaceMesh({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+
+    faceMesh.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+    });
+
+    faceMesh.onResults(onResults);
+
+    camera = new Camera(videoElement, {
+        onFrame: async () => {
+            await faceMesh.send({ image: videoElement });
+            if (vtoLoader) vtoLoader.style.display = 'none';
+        },
+        width: 1280,
+        height: 720
+    });
+}
+
+function createGlassesModel() {
     glassesModel = new THREE.Group();
 
     const frameMaterial = new THREE.MeshStandardMaterial({
-        color: 0x00a3e0, // Cyan Branding
+        color: 0x00a3e0,
         metalness: 0.9,
         roughness: 0.1
     });
@@ -63,57 +73,26 @@ function initThreeJS() {
         roughness: 0
     });
 
-    // Aros
-    const ringGeom = new THREE.TorusGeometry(0.5, 0.05, 16, 100);
-    const leftLens = new THREE.Mesh(ringGeom, frameMaterial);
-    leftLens.position.x = -0.65;
+    const lensGeom = new THREE.CircleGeometry(0.6, 32);
+    const leftLens = new THREE.Mesh(lensGeom, lensMaterial);
+    leftLens.position.set(-0.7, 0, 0.1);
+    const rightLens = new THREE.Mesh(lensGeom, lensMaterial);
+    rightLens.position.set(0.7, 0, 0.1);
 
-    const rightLens = new THREE.Mesh(ringGeom, frameMaterial);
-    rightLens.position.x = 0.65;
+    const frameGeom = new THREE.TorusGeometry(0.6, 0.05, 16, 100);
+    const leftFrame = new THREE.Mesh(frameGeom, frameMaterial);
+    leftFrame.position.set(-0.7, 0, 0.1);
+    const rightFrame = new THREE.Mesh(frameGeom, frameMaterial);
+    rightFrame.position.set(0.7, 0, 0.1);
 
-    // Lunas
-    const insideGeom = new THREE.CircleGeometry(0.5, 32);
-    const leftGlass = new THREE.Mesh(insideGeom, lensMaterial);
-    leftGlass.position.x = -0.65;
-
-    const rightGlass = new THREE.Mesh(insideGeom, lensMaterial);
-    rightGlass.position.x = 0.65;
-
-    // Puente
-    const bridgeGeom = new THREE.CylinderGeometry(0.03, 0.03, 0.3);
+    const bridgeGeom = new THREE.CylinderGeometry(0.05, 0.05, 0.4);
     const bridge = new THREE.Mesh(bridgeGeom, frameMaterial);
     bridge.rotation.z = Math.PI / 2;
+    bridge.position.set(0, 0.2, 0.1);
 
-    glassesModel.add(leftLens, rightLens, leftGlass, rightGlass, bridge);
-    glassesModel.visible = false;
+    glassesModel.add(leftLens, rightLens, leftFrame, rightFrame, bridge);
     scene.add(glassesModel);
-}
-
-function initMediaPipe() {
-    faceMesh = new FaceMesh({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
-    });
-
-    faceMesh.setOptions({
-        maxNumFaces: 1,
-        refineLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-    });
-
-    faceMesh.onResults(onResults);
-
-    camera = new Camera(VTO_VIDEO, {
-        onFrame: async () => {
-            await faceMesh.send({ image: VTO_VIDEO });
-        },
-        width: 640,
-        height: 480,
-    });
-
-    camera.start().then(() => {
-        document.getElementById('vto-loader').style.display = 'none';
-    });
+    glassesModel.visible = false;
 }
 
 function onResults(results) {
@@ -121,52 +100,34 @@ function onResults(results) {
         const landmarks = results.multiFaceLandmarks[0];
         glassesModel.visible = true;
 
-        // Puntos clave de la nariz para posicionar los lentes
-        const noseBridge = landmarks[168]; // Entre los ojos
-        const leftEyeTrack = landmarks[33];
-        const rightEyeTrack = landmarks[263];
+        const leftEye = landmarks[33];
+        const rightEye = landmarks[263];
+        const noseBridge = landmarks[168];
 
-        // Transformar coordenadas de MediaPipe (0-1) a Three.js
-        // Ajuste fino para evitar que se vean "inmensamente grandes"
-        const x = (noseBridge.x - 0.5) * 3.5;
-        const y = -(noseBridge.y - 0.5) * 4.5;
-        const z = -noseBridge.z * 10;
+        const midX = (leftEye.x + rightEye.x) / 2;
+        const midY = (leftEye.y + rightEye.y) / 2;
 
-        glassesModel.position.set(x, y, z);
+        glassesModel.position.x = (0.5 - noseBridge.x) * 2.8;
+        glassesModel.position.y = (0.5 - noseBridge.y) * 2.8;
+        glassesModel.position.z = -landmarks[168].z * 10;
 
-        // Calcular rotación
-        const eyeVector = new THREE.Vector3(
-            rightEyeTrack.x - leftEyeTrack.x,
-            -(rightEyeTrack.y - leftEyeTrack.y),
-            rightEyeTrack.z - leftEyeTrack.z
-        );
+        const dx = rightEye.x - leftEye.x;
+        const dy = rightEye.y - leftEye.y;
+        const angle = Math.atan2(dy, dx);
+        glassesModel.rotation.z = -angle;
 
-        const angleZ = Math.atan2(eyeVector.y, eyeVector.x);
-        glassesModel.rotation.z = angleZ;
-
-        // Escalar según la distancia entre ojos
-        // Ajustado de 8 a 2.8 para un tamaño más realista
-        const dist = Math.sqrt(
-            Math.pow(rightEyeTrack.x - leftEyeTrack.x, 2) +
-            Math.pow(rightEyeTrack.y - leftEyeTrack.y, 2)
-        );
-        const scale = dist * 2.8;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const scale = dist * 2.5;
         glassesModel.scale.set(scale, scale, scale);
 
+        renderer.render(scene, threeCamera);
     } else {
         glassesModel.visible = false;
     }
-
-    renderer.render(scene, threeCamera);
 }
 
-function stopVTO() {
-    if (camera) camera.stop();
-    if (faceMesh) faceMesh.close();
-    glassesModel.visible = false;
-}
-
-async function loadCatalog() {
+// --- Catalog & UI ---
+async function loadCatalog(showAll = false) {
     const catalogGrid = document.getElementById('catalog');
 
     try {
@@ -175,29 +136,26 @@ async function loadCatalog() {
             .select('*');
 
         if (error) throw error;
+        currentProducts = products;
 
-        renderProducts(products);
+        const filtered = showAll ? products : products.filter(p => p.badge && (p.badge.toLowerCase().includes('nuevo') || p.badge.toLowerCase().includes('oferta') || p.badge.toLowerCase().includes('best')));
+
+        renderProducts(filtered.length > 0 ? filtered : products); // If no tagged items, show all as fallback
     } catch (err) {
         console.error("Error cargando el catálogo:", err);
-        // Fallback: Productos de demostración si la base de datos falla
         const fallbackProducts = [
-            { name: "Aviator Cyan Pro", price: 299, image_url: "https://images.unsplash.com/photo-1572635196237-14b3f281503f", badge: "Premium" },
-            { name: "Visión Free Classic", price: 189, image_url: "https://images.unsplash.com/photo-1511499767390-91f89608021d", badge: "Popular" },
+            { name: "Aviator Cyan Pro", price: 299, image_url: "https://images.unsplash.com/photo-1572635196237-14b3f281503f", badge: "Nuevo" },
+            { name: "Visión Free Classic", price: 189, image_url: "https://images.unsplash.com/photo-1511499767390-91f89608021d", badge: "Oferta" },
             { name: "Digital Shield Blue", price: 245, image_url: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67", badge: "Nuevo" }
         ];
+        currentProducts = fallbackProducts;
         renderProducts(fallbackProducts);
-        console.log("Mostrando productos de demostración por error en DB.");
     }
 }
 
 function renderProducts(products) {
     const catalogGrid = document.getElementById('catalog');
     catalogGrid.innerHTML = '';
-
-    if (!products || products.length === 0) {
-        catalogGrid.innerHTML = '<p class="loader-container">No hay productos disponibles por ahora.</p>';
-        return;
-    }
 
     products.forEach(product => {
         const card = document.createElement('div');
@@ -210,23 +168,74 @@ function renderProducts(products) {
             <div class="product-info">
                 <h3>${product.name}</h3>
                 <p class="price">S/ ${parseFloat(product.price).toFixed(2)}</p>
-                <button class="btn-whatsapp" onclick="quoteWhatsApp('${product.name}')">Pedir por WhatsApp</button>
+                <button class="btn-whatsapp" onclick="event.stopPropagation(); quoteWhatsApp('${product.name}')">WhatsApp</button>
             </div>
         `;
+        card.onclick = () => openProductModal(product);
         catalogGrid.appendChild(card);
     });
 }
 
+function openProductModal(product) {
+    const modal = document.getElementById('product-modal');
+    document.getElementById('modal-image').src = product.image_url;
+    document.getElementById('modal-name').innerText = product.name;
+    document.getElementById('modal-price').innerText = `S/ ${parseFloat(product.price).toFixed(2)}`;
+
+    const badge = document.getElementById('modal-badge-float');
+    if (product.badge) {
+        badge.innerText = product.badge;
+        badge.style.display = 'block';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+
+    document.getElementById('modal-vto-btn').onclick = () => {
+        modal.style.display = 'none';
+        startVTO();
+    };
+
+    document.getElementById('modal-wa-btn').onclick = () => quoteWhatsApp(product.name);
+}
+
 function quoteWhatsApp(productName) {
-    const phone = "51900000000"; // Cambiar por el número real de la óptica
-    const message = encodeURIComponent(`Hola, me interesa la montura: ${productName}. ¿Está disponible?`);
+    const phone = "51900000000";
+    const message = encodeURIComponent(`Hola Visión Free, me interesa la montura: ${productName}. ¿Podrían darme más información?`);
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
 }
 
-// Cargar catálogo al iniciar
-window.addEventListener('DOMContentLoaded', loadCatalog);
+function startVTO() {
+    document.getElementById('vto-overlay').style.display = 'flex';
+    if (!camera) setupVTO();
+    camera.start();
+}
 
-// Interacción de UI
-document.querySelector('.btn-primary').addEventListener('click', () => {
-    document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+function stopVTO() {
+    document.getElementById('vto-overlay').style.display = 'none';
+    if (camera) camera.stop();
+    if (glassesModel) glassesModel.visible = false;
+}
+
+// --- Listeners ---
+window.addEventListener('DOMContentLoaded', () => {
+    loadCatalog();
+
+    document.querySelector('.close-vto').onclick = stopVTO;
+    document.querySelector('.close-modal').onclick = () => {
+        document.getElementById('product-modal').style.display = 'none';
+    };
+
+    window.onclick = (event) => {
+        const modal = document.getElementById('product-modal');
+        if (event.target == modal) modal.style.display = 'none';
+    };
+
+    document.getElementById('load-all-btn').onclick = () => {
+        loadCatalog(true);
+        document.getElementById('load-all-btn').style.display = 'none';
+    };
+
+    document.getElementById('direct-vto').onclick = startVTO;
 });

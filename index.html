@@ -33,40 +33,74 @@
         <section class="hero">
             <div class="hero-content">
                 <h1>Visión sin límites, estilo sin esfuerzo.</h1>
-                <p>Explora nuestra colección 2026. Tecnología de lunas avanzada y monturas de diseño exclusivo.</p>
-                <div class="cta-group">
+                <p>Explora nuestra colección 2026. Tecnología de luna avanzada y monturas de diseño exclusivo.</p>
+                <div class="hero-btns">
                     <button class="btn-primary">Ver Catálogo</button>
-                    <button class="btn-secondary" onclick="toggleVirtualTryOn()">
-                        <span class="icon">📷</span> Probar con Cámara
-                    </button>
+                    <button class="btn-secondary" id="direct-vto">Probar con Cámara</button>
                 </div>
             </div>
+        </section>
+
+        <section class="section-header">
+            <h2 class="section-title">Novedades & Ofertas</h2>
+            <p class="section-subtitle">Exclusividad en cada mirada</p>
         </section>
 
         <section id="catalog" class="catalog-grid">
             <!-- Los productos se cargarán dinámicamente desde Supabase -->
             <div id="loading-spinner" class="loader-container">
                 <div class="spinner"></div>
-                <p>Cargando monturas premium...</p>
+                <p>Curando lo mejor para ti...</p>
             </div>
         </section>
+
+        <div class="view-all-container">
+            <button class="btn-secondary" id="load-all-btn">Ver Colección Completa</button>
+        </div>
     </main>
 
-    <!-- Overlay for Virtual Try On Demo -->
-    <div id="vto-overlay" class="overlay">
-        <div class="vto-container">
-            <button class="close-btn" onclick="toggleVirtualTryOn()">×</button>
-            <div class="vto-video-container">
-                <video id="vto-video" autoplay playsinline></video>
-                <canvas id="vto-canvas"></canvas>
-                <div id="vto-loader" class="vto-video-placeholder">
-                    <div class="pulse"></div>
-                    <p>Iniciando Realidad Aumentada...</p>
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div class="product-gallery">
+                    <img id="modal-image" src="" alt="Product">
+                    <div id="modal-badge-float" class="badge"></div>
+                </div>
+                <div class="product-details">
+                    <h2 id="modal-name"></h2>
+                    <p id="modal-price" class="price"></p>
+                    <p class="product-desc">Diseño ergonómico con acabados de alta precisión. Materiales resistentes y
+                        ligeros para un confort diario superior. Ideal para uso prolongado frente a pantallas.</p>
+
+                    <div class="modal-actions">
+                        <button class="btn-primary" id="modal-vto-btn">
+                            <span class="icon">📷</span> Probar con Cámara
+                        </button>
+                        <button class="btn-whatsapp" id="modal-wa-btn">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+
+                    <div class="product-specs">
+                        <div class="spec-item"><span>Material:</span> Acetato / Metal</div>
+                        <div class="spec-item"><span>Envío:</span> Gratis en todo Lima</div>
+                        <div class="spec-item"><span>Incluye:</span> Estuche rígido + Paño microfibra</div>
+                    </div>
                 </div>
             </div>
-            <div class="vto-controls">
-                <span>Desliza para cambiar modelo</span>
-            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Virtual Try On -->
+    <div id="vto-overlay" class="vto-overlay">
+        <div class="vto-container">
+            <div class="loader" id="vto-loader">Cargando Realidad Aumentada...</div>
+            <video id="input-video" playsinline style="display: none;"></video>
+            <canvas id="output-canvas"></canvas>
+            <button class="close-vto">&times;</button>
+            <div class="vto-instruction">Mueve tu cabeza lentamente para calibrar</div>
         </div>
     </div>
 
