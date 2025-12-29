@@ -623,7 +623,11 @@ nav {
 
 .product-gallery img {
     max-width: 100%;
-    height: auto;
+    max-height: 500px;
+    /* Constrain Height */
+    width: auto;
+    object-fit: contain;
+    /* Ensure it fits without crop */
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
 }
 
