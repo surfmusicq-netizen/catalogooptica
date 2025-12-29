@@ -178,5 +178,17 @@ window.addEventListener('DOMContentLoaded', () => {
     window.onclick = (e) => { if (e.target.id === 'product-modal') document.getElementById('product-modal').style.display = 'none'; };
     document.querySelector('.close-vto').onclick = stopVTO;
     document.getElementById('load-all-btn').onclick = () => { loadCatalog(null, true); document.getElementById('load-all-btn').style.display = 'none'; };
-    document.getElementById('direct-vto').onclick = startVTO;
+
+    if (document.getElementById('direct-vto')) {
+        document.getElementById('direct-vto').onclick = startVTO;
+    }
+
+    // Toggle Mobile Menu
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    if (mobileMenu) {
+        mobileMenu.onclick = () => {
+            navLinks.classList.toggle('active');
+        };
+    }
 });
