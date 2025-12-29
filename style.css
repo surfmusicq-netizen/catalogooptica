@@ -228,9 +228,9 @@ nav {
         scroll-snap-type: x mandatory;
         gap: 1rem;
         padding-bottom: 1rem;
-        /* Space for scrollbar */
+        margin-top: 2rem;
+        /* Separacion extra en movil */
         -webkit-overflow-scrolling: touch;
-        /* Smooth scroll iOS */
     }
 
     .cat-item {
@@ -259,7 +259,7 @@ nav {
     height: 250px;
     /* Shorter cards on mobile */
 }
-}
+
 
 .cat-item {
     position: relative;
