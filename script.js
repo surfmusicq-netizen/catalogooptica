@@ -108,11 +108,15 @@ async function loadCatalog(category = null, showAll = false) {
 }
 
 // Subcategory filtering (Client-side for now since missing DB columns)
+// Subcategory filtering (Client-side for now since missing DB columns)
 window.filterCatalog = (category, gender, filter) => {
     // Scroll to catalog
     document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' });
     const grid = document.getElementById('catalog');
     grid.innerHTML = '<div class="loader-container"><div class="spinner"></div><p>Filtrando...</p></div>';
+
+    // Auto-close Menu
+    document.querySelector('.nav-links').classList.remove('active');
 
     loadCatalog(category).then(() => {
         // Apply extra client side filters
