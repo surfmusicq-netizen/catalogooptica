@@ -44,10 +44,10 @@ nav {
 
 .logo img {
     height: auto;
-    width: clamp(180px, 35vw, 240px);
-    /* Much Larger Logo */
+    width: clamp(220px, 50vw, 280px);
+    /* MAXIMIZED Logo */
     object-fit: contain;
-    max-height: 90px;
+    max-height: 100px;
     transition: all 0.3s ease;
 }
 
@@ -672,6 +672,63 @@ nav {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Helper Classes */
+.view-all-container {
+    text-align: center;
+    margin-top: 3rem;
+    padding-bottom: 2rem;
+}
+
+/* VTO Overlay - Hidden by default */
+.vto-overlay {
+    display: none;
+    /* Crucial: Hidden by default */
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+}
+
+.vto-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    background: #000;
+}
+
+#output-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    /* Mirror effect */
+}
+
+.close-vto {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 3001;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 900px) {
