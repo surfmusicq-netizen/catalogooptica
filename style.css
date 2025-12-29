@@ -740,20 +740,45 @@ nav {
 @media (max-width: 900px) {
     .modal-content {
         grid-template-columns: 1fr;
-        max-height: 95vh;
+        max-height: 90vh;
         overflow-y: auto;
         width: 95%;
-
-        .product-gallery {
-            padding: 2rem;
-        }
-
-        .product-details {
-            padding: 2rem;
-        }
-
-        .hero {
-            padding: 6rem 5%;
-            margin-top: 70px;
-        }
+        display: flex;
+        /* Stack vertically reliably */
+        flex-direction: column;
     }
+
+    .product-gallery {
+        padding: 1.5rem;
+        background: #f8f8f8;
+        min-height: 250px;
+        /* Ensure space for image */
+        flex-shrink: 0;
+        /* Keep gallery from shrinking too much */
+    }
+
+    .product-gallery img {
+        max-height: 250px !important;
+        /* Force limit on mobile */
+        width: auto;
+        max-width: 100%;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .product-details {
+        padding: 1.5rem;
+        overflow-y: visible;
+        /* Let text flow */
+    }
+
+    .intro-modal {
+        display: none;
+        /* Hide any pc-specific elements if any */
+    }
+
+    .hero {
+        padding: 6rem 5%;
+        margin-top: 70px;
+    }
+}
