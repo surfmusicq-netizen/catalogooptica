@@ -116,41 +116,35 @@ nav {
     background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.6)), url('assets/hero_banner.png');
     background-size: cover;
     background-position: center;
-    padding: 10rem 5%;
+    padding: 8rem 5%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    /* Align left for cleaner look */
     text-align: left;
     color: #1a1a1a;
     /* Dark Text */
-    min-height: 80vh;
+    min-height: 70vh;
 }
 
 .hero-content {
     max-width: 600px;
-    background: rgba(255, 255, 255, 0.85);
-    /* Light card */
-    padding: 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2.5rem;
     border-radius: 4px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .hero h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
     margin-bottom: 1rem;
     color: #000;
-    line-height: 1.1;
-    text-shadow: none;
+    line-height: 1.2;
 }
 
-
-
 .hero p {
-    font-size: 1.2rem;
-    color: #f0f0f0;
+    font-size: 1.1rem;
+    color: #444;
     margin-bottom: 2rem;
 }
 
