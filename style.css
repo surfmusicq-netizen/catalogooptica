@@ -2,8 +2,10 @@
     --bg-color: #ffffff;
     --text-primary: #1a1a1a;
     --text-secondary: #666666;
-    --accent-color: #005696;
-    --accent-light: #f0f7ff;
+    --accent-color: #00a3e0;
+    /* Branding Cyan */
+    --accent-dark: #007bb6;
+    --accent-light: #e0f6ff;
     --border-color: #e5e5e5;
     --card-bg: #ffffff;
     --whatsapp-green: #25D366;
@@ -36,18 +38,18 @@ header {
 nav {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0.8rem 5%;
+    padding: 0.5rem 5%;
+    /* Reduced padding for slimmer header */
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .logo img {
-    height: auto;
-    width: clamp(220px, 50vw, 280px);
-    /* MAXIMIZED Logo */
+    height: 50px;
+    /* Fixed height for consistency */
+    width: auto;
     object-fit: contain;
-    max-height: 100px;
     transition: all 0.3s ease;
 }
 
